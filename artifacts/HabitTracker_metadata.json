@@ -1,0 +1,136 @@
+{
+	"compiler": {
+		"version": "0.8.31+commit.fd3a2265"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "_name",
+						"type": "string"
+					}
+				],
+				"name": "addHabit",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_habitIndex",
+						"type": "uint256"
+					}
+				],
+				"name": "completeHabit",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "getMyHabits",
+				"outputs": [
+					{
+						"components": [
+							{
+								"internalType": "string",
+								"name": "name",
+								"type": "string"
+							},
+							{
+								"internalType": "uint256",
+								"name": "streak",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "lastCompleted",
+								"type": "uint256"
+							}
+						],
+						"internalType": "struct HabitTracker.Habit[]",
+						"name": "",
+						"type": "tuple[]"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"name": "userHabits",
+				"outputs": [
+					{
+						"internalType": "string",
+						"name": "name",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "streak",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "lastCompleted",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"contracts/Habit Tracker.sol": "HabitTracker"
+		},
+		"evmVersion": "osaka",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": true,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"contracts/Habit Tracker.sol": {
+			"keccak256": "0x04287cf6c2b79e2c024563fde4d5228a625f5ec72c3f06aff71b196f43e37e1a",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://023301d57adfa3cb318ef2d3cc1f8d3c85c253b49e5f2d1346643a4abd0edc25",
+				"dweb:/ipfs/QmYF6SUnG9rp6WdKnDCDfUWHLn3q8y2DgsqiUA5i5S7pFt"
+			]
+		}
+	},
+	"version": 1
+}

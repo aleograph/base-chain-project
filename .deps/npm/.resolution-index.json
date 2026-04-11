@@ -1,0 +1,42 @@
+{
+  "Daily ToDos.sol": {
+    "__sources__": {
+      "Daily ToDos.sol": {
+        "content": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8.20;\n\ncontract DailyTodo {\n    struct Task {\n        string description;\n        bool completed;\n        uint256 createdAt;\n    }\n    \n    Task[] public tasks;\n    address public owner;\n    \n    constructor() {\n        owner = msg.sender;\n    }\n    \n    modifier onlyOwner() {\n        require(msg.sender == owner, \"Only owner can call this\");\n        _;\n    }\n    \n    function addTask(string memory _desc) public onlyOwner {\n        tasks.push(Task(_desc, false, block.timestamp));\n    }\n    \n    function completeTask(uint256 _index) public onlyOwner {\n        require(_index < tasks.length, \"Task does not exist\");\n        tasks[_index].completed = true;\n    }\n    \n    function getTaskCount() public view returns (uint256) {\n        return tasks.length;\n    }\n    \n    function getPendingTasks() public view returns (string[] memory) {\n        uint256 pendingCount = 0;\n        for (uint256 i = 0; i < tasks.length; i++) {\n            if (!tasks[i].completed) pendingCount++;\n        }\n        \n        string[] memory pending = new string[](pendingCount);\n        uint256 counter = 0;\n        for (uint256 i = 0; i < tasks.length; i++) {\n            if (!tasks[i].completed) {\n                pending[counter] = tasks[i].description;\n                counter++;\n            }\n        }\n        return pending;\n    }\n}",
+        "file": "Daily ToDos.sol"
+      }
+    }
+  },
+  "contracts/Habit Tracker.sol": {
+    "__sources__": {
+      "contracts/Habit Tracker.sol": {
+        "content": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8.20;\n\ncontract HabitTracker {\n    struct Habit {\n        string name;\n        uint256 streak;\n        uint256 lastCompleted;\n    }\n    \n    mapping(address => Habit[]) public userHabits;\n    \n    function addHabit(string memory _name) public {\n        userHabits[msg.sender].push(Habit(_name, 0, 0));\n    }\n    \n    function completeHabit(uint256 _habitIndex) public {\n        Habit[] storage habits = userHabits[msg.sender];\n        require(_habitIndex < habits.length, \"Habit does not exist\");\n        \n        Habit storage habit = habits[_habitIndex];\n        // Simple daily check (in real use, consider timestamps more carefully)\n        if (block.timestamp - habit.lastCompleted > 1 days) {\n            if (block.timestamp - habit.lastCompleted < 2 days) {\n                habit.streak++;\n            } else {\n                habit.streak = 1; // Reset streak if missed\n            }\n        }\n        habit.lastCompleted = block.timestamp;\n    }\n    \n    function getMyHabits() public view returns (Habit[] memory) {\n        return userHabits[msg.sender];\n    }\n}",
+        "file": "contracts/Habit Tracker.sol"
+      }
+    }
+  },
+  "contracts/Water Intake Logger.sol": {
+    "__sources__": {
+      "contracts/Water Intake Logger.sol": {
+        "content": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8.20;\n\ncontract WaterLogger {\n    mapping(address => uint256) public dailyIntake; // in ml\n    mapping(address => uint256) public lastLogDate;\n    \n    event WaterLogged(address user, uint256 amount, uint256 date);\n    \n    function logWater(uint256 _ml) public {\n        uint256 today = block.timestamp / 1 days; // Rough day bucket\n        require(_ml > 0 && _ml <= 10000, \"Invalid amount\");\n        \n        if (lastLogDate[msg.sender] != today) {\n            dailyIntake[msg.sender] = 0; // Reset for new day\n            lastLogDate[msg.sender] = today;\n        }\n        \n        dailyIntake[msg.sender] += _ml;\n        emit WaterLogged(msg.sender, _ml, today);\n    }\n    \n    function getTodayIntake() public view returns (uint256) {\n        uint256 today = block.timestamp / 1 days;\n        if (lastLogDate[msg.sender] == today) {\n            return dailyIntake[msg.sender];\n        }\n        return 0;\n    }\n}",
+        "file": "contracts/Water Intake Logger.sol"
+      }
+    }
+  },
+  "contracts/Daily Gratitude Journal.sol": {
+    "__sources__": {
+      "contracts/Daily Gratitude Journal.sol": {
+        "content": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8.20;\n\ncontract GratitudeJournal {\n    struct Entry {\n        string note;\n        uint256 timestamp;\n    }\n    \n    mapping(address => Entry[]) public journals;\n    \n    function addGratitude(string memory _note) public {\n        require(bytes(_note).length > 0, \"Note cannot be empty\");\n        journals[msg.sender].push(Entry(_note, block.timestamp));\n    }\n    \n    function getMyEntries() public view returns (Entry[] memory) {\n        return journals[msg.sender];\n    }\n    \n    function getEntryCount() public view returns (uint256) {\n        return journals[msg.sender].length;\n    }\n}",
+        "file": "contracts/Daily Gratitude Journal.sol"
+      }
+    }
+  },
+  "contracts/Pomodoro Session Tracker.sol": {
+    "__sources__": {
+      "contracts/Pomodoro Session Tracker.sol": {
+        "content": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8.20;\n\ncontract PomodoroTracker {\n    struct Session {\n        uint256 duration; // in minutes\n        string taskDescription;\n        uint256 timestamp;\n    }\n    \n    mapping(address => Session[]) public sessions;\n    uint256 public totalSessions;\n    \n    event SessionLogged(address user, uint256 duration, string task);\n    \n    function logSession(uint256 _minutes, string memory _task) public {\n        require(_minutes > 0 && _minutes <= 120, \"Invalid duration\");\n        sessions[msg.sender].push(Session(_minutes, _task, block.timestamp));\n        totalSessions++;\n        emit SessionLogged(msg.sender, _minutes, _task);\n    }\n    \n    function getMySessions() public view returns (Session[] memory) {\n        return sessions[msg.sender];\n    }\n    \n    function getTotalFocusTime() public view returns (uint256) {\n        uint256 total = 0;\n        Session[] memory mySessions = sessions[msg.sender];\n        for (uint256 i = 0; i < mySessions.length; i++) {\n            total += mySessions[i].duration;\n        }\n        return total;\n    }\n}",
+        "file": "contracts/Pomodoro Session Tracker.sol"
+      }
+    }
+  }
+}
